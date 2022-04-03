@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" 
+    integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./style/index.css">
+</head>
+<body>
+    <div id="navbar">
+
+    </div>
+
+
+
+<div id="main">
+
+    <div id="sidebar">
+        <img src="https://images.pexels.com/photos/11251607/pexels-photo-11251607.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" id="profile_main">
+        <h2 id="username">Debo</h2>
+    </div>
+    
+    <div id="left">
+        <div id="head">
+            <input type="search" name="" id="recent_search" placeholder="Find a repository">
+            <select id="select" >
+                <option value="Type">Type
+                    <option value="Language" >Public
+                    <option value="Private">Private
+                    <option value="Source">Source
+                    <option value="Fork">Fork
+                </select>
+                <select id="select" >
+                    <option value="Language">Language
+                        <option value="JavaScript" >JavaScript
+                        <option value="HTML">HTML
+                        
+                    </select>
+                    <select id="select" >
+                        <option value="Select Order">Select Order
+                            <option value="Last update" >Public
+                            <option value="Name">Name
+                            <option value="Stars">Stars
+                        </select>
+            <button class="btn"><i class="fa-solid fa-book"></i>New</button>
+        </div>
+        <div>
+            <hr>
+            <h4 class="recent_repo">Recent activity</h4>
+            <p class="recent_para">When you take actions across GitHub, we’ll
+                 provide links to that activity here.</p>
+        </div>
+        <div id="your_repo">
+           
+        </div>
+    </div>  
+
+       
+        
+   
+
+    <!-- </div> -->
+
+      <!-- <div id="main_content"> -->
+       
+
+        
+
+      <!-- </div> -->
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+    <script type="module">
+//   import header from "./components/header.js"
+         import {header} from "./components/header.js"
+     let navbar = document.getElementById("navbar")
+        navbar.innerHTML=header();
+        // console.log(header)
+  
+
+
+            /////-----GITHUB API----/////
+        //https://api.github.com/
+
+        let input_box = document.getElementById("search-input")
+        input_box.addEventListener("keypress", ()=>{
+
+            getData(event);
+
+        });
+
+        let img = document.getElementById('profile-img')
+
+        const getData= async (e) => {
+          try{
+
+          
+            if(e.code === 'Enter'){
+
+                let input = input_box.value;
+                let res = await fetch(`https://api.github.com/users/${input}/repos`)
+
+                let data =await res.json()
+                console.log("data:",data)
+
+                img.src=data[0].owner.avatar_url
+            //    data =data[0]
+
+               displayData(data)
+            //    mainData(data)
+            }
+        }
+        catch (error){
+            console.log("error",error)
+        }
+        };
+
+
+        let your_repo = document.getElementById("your_repo")
+
+
+
+     function displayData (data){
+         your_repo.innerHTML=null;
+
+        var sidebar = document.getElementById('sidebar')
+        
+        var img=document.getElementById('profile_main')
+        img.src=data[0].owner.avatar_url
+
+        var name = document.getElementById("username")
+        name.innerText= data[0].owner.login;
+        sidebar.append(img,name)
+
+           data.forEach((el) => {
+
+
+           
+            let div=document.createElement("div")
+            div.setAttribute("id","child_repo")
+
+            // let image = document.createElement("img")
+            // image.src=el.owner.avatar_url
+
+            let name = document.createElement("p")
+            name.innerText=el.full_name;
+            let vis =document.createElement('p')
+            vis.innerText=el.visibility;
+            
+
+            let desc = document.createElement('p')
+            desc.innerText=el.description;
+            desc.setAttribute("id",'desc')
+
+            //description
+            let hr = document.createElement('hr')
+
+            div.append(name,vis,desc,hr)
+            
+
+            your_repo.append(div)
+
+        })
+        }
+
+        let main = document.getElementById('main')
+
+       function mainData (data) {
+            data.forEach((el) => {
+
+            let div1 = document.createElement("div")
+
+            let para = document.createElement('div')
+            para.innerText=el.owner.following_url;
+
+            div1.append(para)
+
+            main.append(div1)
+        })
+  }
+    </script>
